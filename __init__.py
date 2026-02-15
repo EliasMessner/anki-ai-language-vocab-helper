@@ -7,9 +7,9 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "libs"))
 
 from google import genai
 
-# The client gets the API key from the environment variable `GEMINI_API_KEY`.
-# set the env variable programmatically
-os.environ["GOOGLE_API_KEY"] = open("api_key").read()
+# The client gets the API key from the environment variable `GEMINI_API_KEY`
+api_file_path = os.path.join(os.path.dirname(__file__), "api_key")
+os.environ["GOOGLE_API_KEY"] = open(api_file_path).read()
 
 client = genai.Client()
 
@@ -30,6 +30,14 @@ def get_gpt_sentence(en_expression, es_expression):
         return response.text.strip()
     except Exception as e:
         return f"Error: {str(e)} | Error: {str(e)}"
+    
+
+def render_english_sentence(sentence):
+    return f"<div style='color:gray; font-size:0.8em; margin-top:20px;'>Context hint: {sentence}</div>"
+
+
+def render_spanish_sentence(sentence):
+    return f"<hr><div style='font-style:italic;'>{sentence}</div>"
 
 
 def on_card_will_show(text, card, kind):
@@ -43,15 +51,17 @@ def on_card_will_show(text, card, kind):
             spanish_sent, english_sent = [s.strip() for s in llm_output.split("|")[:2]]
             if not (spanish_sent.startswith("Error") and english_sent.startswith("Error")):
                 last_generated_contexts[card.id] = {"en": english_sent, "es": spanish_sent}
-        return text + f"<div style='color:gray; font-size:0.8em; margin-top:20px;'>Context hint: {english_sent}</div>"
+        return text + render_english_sentence(english_sent)
     
     elif kind.startswith("reviewAnswer"):
         if card.id in last_generated_contexts.keys():
             spanish_sent = last_generated_contexts[card.id]["es"]
             english_sent = last_generated_contexts[card.id]["en"]
+            # display front and back
             return text\
-                .replace("<hr id=answer>", f"<div style='color:gray; font-size:0.8em; margin-top:20px;'>Context hint: {english_sent}</div>\n\n<hr id=answer>") \
-                    + f"<hr><div style='font-style:italic;'>{spanish_sent}</div>"
+                .replace("<hr id=answer>", 
+                         render_english_sentence(english_sent) + "<hr id=answer>") \
+                            + render_spanish_sentence(spanish_sent)
 
     return text
 
