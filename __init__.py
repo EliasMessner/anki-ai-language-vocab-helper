@@ -19,7 +19,7 @@ last_generated_contexts = dict()
 def get_gpt_sentence(en_expression, es_expression):
     try:
         response = client.models.generate_content(
-            model="gemini-3-flash-preview",
+            model="gemini-2.5-flash",
             contents=f"""
             Provide a Spanish sentence using the given expression below in a context, 
             followed by its English translation. Ignore all image or formatting text. 
@@ -33,7 +33,7 @@ def get_gpt_sentence(en_expression, es_expression):
     
 
 def render_english_sentence(sentence):
-    return f"<div style='color:gray; font-size:0.8em; margin-top:20px;'>Context hint: {sentence}</div>"
+    return f"<div style='color:gray; font-size:0.8em; margin-top:20px;'>{sentence}</div>"
 
 
 def render_spanish_sentence(sentence):
