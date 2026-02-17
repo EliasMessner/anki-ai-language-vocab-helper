@@ -19,11 +19,13 @@ last_generated_contexts = dict()
 def get_gpt_sentence(en_expression, es_expression):
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-2.5-flash-lite",
             contents=f"""
             Provide a Spanish sentence using the given expression below in a context, 
             followed by its English translation. Ignore all image or formatting text. 
-            In case of many word forms, pick any. Format: 'Spanish sentence | English translation' 
+            In case of many word forms, pick any. 
+            Prefer castilian (Spain) Spanish to Latin American. 
+            Format: 'Spanish sentence | English translation' 
             
             \n\n\nExpression: EN: {en_expression}, ES: {es_expression}"""
         )
