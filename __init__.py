@@ -31,7 +31,9 @@ def get_gpt_sentence(en_expression, es_expression):
         )
         return response.text.strip()
     except Exception as e:
-        return f"Error: {str(e)} | Error: {str(e)}"
+        if "RESOURCE_EXHAUSTED" in str(e):
+            return "Error: API quota exhausted.|Error: API quota exhausted."
+        return f"Error: {str(e)}|Error: {str(e)}"
     
 
 def render_english_sentence(sentence):
