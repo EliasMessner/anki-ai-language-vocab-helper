@@ -1,6 +1,6 @@
 # Anki AI Language Vocab Helper
 
-This is an Anki add-on for Language vocabulary flashcards. It asks the learner to translate an example sentence (context hint) for each card during review. This helps connect a word with how it's used. The example sentences are created on-the-fly and shown on the card during review, but the card itself is not edited - the changes are only in memory.
+An Anki add-on for language vocabulary flashcards. It asks the learner to translate an example sentence (context hint) for each card during review. This helps connect a word with how it's used. The example sentences are created on-the-fly and shown on the card during review, but the card itself is not edited - the changes are only in memory.
 
 The add-on requires flashcards in a specific format:
 
