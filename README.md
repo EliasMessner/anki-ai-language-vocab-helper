@@ -7,6 +7,23 @@ The add-on requires flashcards in a specific format:
 *   **Front:** Word or expression in your source language (e.g. English if you're learning a new language as an English speaker)
 *   **Back:** Translation in target language (the language you are trying to learn)
 
+## Example
+In this example, the source language is English and the target language is Spanish. The front side asks us to translate the expression "to realize, notice" into Spanish. The solution on the back side is "darse cuenta de".
+
+![raw card](image-2.png)
+
+When reviewing the card, an example sentence using the expression in a meaningful context is generated and presented to us below the actual expression. In this example, the generated context hint is "I realized that I had forgotten the keys"
+
+
+![front card with ai sentence](image.png)
+
+The back side then shows the solution along with the translation of the context hint, in this case "Me di cuenta de que había olvidado las llaves".
+
+
+![back card with ai sentence and its translation](image-1.png)
+
+This allows us to practice the expression in a natural way. The example sentence for each card is cached during the session - when we review the same card again, the same sentence will be shown. The cache is cleared upon quitting Anki. The cards are never actually edited on disk.
+
 ## Features
 
 *   **Question:** An example sentence in the source language using the word in context is generated automatically on the question side of the card.
