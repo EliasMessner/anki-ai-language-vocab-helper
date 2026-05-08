@@ -11,6 +11,8 @@ from google import genai
 
 # The client gets the API key from the environment variable `GEMINI_API_KEY`
 api_file_path = os.path.join(os.path.dirname(__file__), "api_key")
+config_file_path = os.path.join(os.path.dirname(__file__), "config.json")
+prompt_file_path = os.path.join(os.path.dirname(__file__), "prompt")
 os.environ["GOOGLE_API_KEY"] = open(api_file_path).read()
 
 client = genai.Client()
@@ -23,7 +25,7 @@ def get_gpt_sentence(source_language_expression, target_language_expression):
     source_language = config_properties["source_language"]
     target_language = config_properties["target_language"]
     
-    prompt = Path("prompt").read_text()\
+    prompt = Path(prompt_file_path).read_text()\
         .replace("{source_language}", source_language)\
         .replace("{target_language}", target_language)\
         .replace("{source_language_expression}", source_language_expression)\
@@ -41,7 +43,7 @@ def get_gpt_sentence(source_language_expression, target_language_expression):
         return f"Error: {str(e)}|Error: {str(e)}"
     
 def read_config_file():
-    with open('config.json', 'r') as file:
+    with open(config_file_path, 'r') as file:
         data = json.load(file)
     return data
 
