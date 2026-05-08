@@ -25,6 +25,7 @@ The add-on requires flashcards in a specific format:
 
 ## Setup
 
-1.  Save the whole directory in your **Anki add-on folder**.
-2.  Put your Google API key in a file called `api_key` in the top directory of the add-on folder.
-3.  **Restart** Anki.
+1.  Save the whole directory into your **Anki add-on folder**
+2.  Replace the contents of the "api_key" file with your Google API key. You can create a free tier API key at https://aistudio.google.com/
+3.  Set the source and target language in the "config.json" file. For example, if you're an English speaker and want to learn peninsular Spanish, you need to set "source_language" to "English" and "target_language" to "Spanish (peninsular)"
+4.  **Restart** Anki.
