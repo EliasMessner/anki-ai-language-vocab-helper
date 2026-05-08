@@ -1,6 +1,8 @@
 import sys
 import os
 from aqt import gui_hooks
+from pathlib import Path
+import json
 
 # Add the 'libs' folder to the Python path before other imports
 sys.path.append(os.path.join(os.path.dirname(__file__), "libs"))
@@ -16,18 +18,21 @@ client = genai.Client()
 last_generated_contexts = dict()
 
 
-def get_gpt_sentence(en_expression, es_expression):
-    try:
+def get_gpt_sentence(source_language_expression, target_language_expression):
+    config_properties = read_config_file()
+    source_language = config_properties["source_language"]
+    target_language = config_properties["target_language"]
+    
+    prompt = Path("prompt").read_text()\
+        .replace("{source_language}", source_language)\
+        .replace("{target_language}", target_language)\
+        .replace("{source_language_expression}", source_language_expression)\
+        .replace("{target_language_expression}", target_language_expression)
+    
+    try:    
         response = client.models.generate_content(
-            model="gemini-2.5-flash-lite",
-            contents=f"""
-            Provide a Spanish sentence using the given expression below in a context, 
-            followed by its English translation. Ignore all image or formatting text. 
-            In case of many word forms, pick any. 
-            Prefer castilian (Spain) Spanish to Latin American. 
-            Format: 'Spanish sentence | English translation' 
-            
-            \n\n\nExpression: EN: {en_expression}, ES: {es_expression}"""
+            model="gemini-2.5-flash",
+            contents=prompt
         )
         return response.text.strip()
     except Exception as e:
@@ -35,12 +40,16 @@ def get_gpt_sentence(en_expression, es_expression):
             return "Error: API quota exhausted.|Error: API quota exhausted."
         return f"Error: {str(e)}|Error: {str(e)}"
     
+def read_config_file():
+    with open('config.json', 'r') as file:
+        data = json.load(file)
+    return data
 
-def render_english_sentence(sentence):
+def render_source_language_sentence(sentence):
     return f"<div style='color:gray; font-size:0.8em; margin-top:20px;'>{sentence}</div>"
 
 
-def render_spanish_sentence(sentence):
+def render_target_language_sentence(sentence):
     return f"<hr><div style='font-style:italic;'>{sentence}</div>"
 
 
@@ -49,23 +58,23 @@ def on_card_will_show(text, card, kind):
 
     if kind.startswith("reviewQuestion"):
         if card.id in last_generated_contexts.keys():
-            english_sent = last_generated_contexts[card.id]["en"]
+            source_language_sent = last_generated_contexts[card.id]["source_lang_sentence"]
         else:
             llm_output = get_gpt_sentence(card.note().fields[0], card.note().fields[1])
-            spanish_sent, english_sent = [s.strip() for s in llm_output.split("|")[:2]]
-            if not (spanish_sent.startswith("Error") and english_sent.startswith("Error")):
-                last_generated_contexts[card.id] = {"en": english_sent, "es": spanish_sent}
-        return text + render_english_sentence(english_sent)
+            target_language_sent, source_language_sent = [s.strip() for s in llm_output.split("|")[:2]]
+            if not (target_language_sent.startswith("Error") and source_language_sent.startswith("Error")):
+                last_generated_contexts[card.id] = {"source_lang_sentence": source_language_sent, "target_lang_sentence": target_language_sent}
+        return text + render_source_language_sentence(source_language_sent)
     
     elif kind.startswith("reviewAnswer"):
         if card.id in last_generated_contexts.keys():
-            spanish_sent = last_generated_contexts[card.id]["es"]
-            english_sent = last_generated_contexts[card.id]["en"]
+            target_language_sent = last_generated_contexts[card.id]["target_lang_sentence"]
+            source_language_sent = last_generated_contexts[card.id]["source_lang_sentence"]
             # display front and back
             return text\
                 .replace("<hr id=answer>", 
-                         render_english_sentence(english_sent) + "<hr id=answer>") \
-                            + render_spanish_sentence(spanish_sent)
+                         render_source_language_sentence(source_language_sent) + "<hr id=answer>") \
+                            + render_target_language_sentence(target_language_sent)
 
     return text
 

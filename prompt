@@ -1,0 +1,7 @@
+Provide a short {target_language} sentence using the given expression below in a context, 
+followed by its {source_language} translation. Ignore all image or formatting text. 
+In case of many word forms, pick any. 
+
+Format: '{target_language} sentence | {source_language} translation' 
+            
+Expression: {source_language}: {source_language_expression}, {target_language}: {target_language_expression}
