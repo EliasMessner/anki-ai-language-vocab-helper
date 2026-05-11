@@ -1,6 +1,6 @@
 # Anki AI Language Vocab Helper
 
-An Anki add-on for language vocabulary flashcards. It asks the learner to translate an example sentence (context hint) for each card during review. This helps connect a word with how it's used. The example sentences are created on-the-fly and shown on the card during review, but the card itself is not edited - the changes are only in memory.
+An Anki add-on for language vocabulary flashcards. It asks the learner to translate an example sentence (context hint) for each card during review. This helps connect a word with how it's used. The example sentences are created on-the-fly and shown on the card during review, but the card itself is not edited. It uses `gemini-2.0-flash` which turned out to be a good balance between quality and latency. The source and target language can be adjusted in the config file.
 
 The add-on requires flashcards in a specific format:
 
@@ -23,15 +23,6 @@ The back side then shows the solution along with the translation of the context 
 ![back card with ai sentence and its translation](image-1.png)
 
 This allows us to practice the expression in a natural way. The example sentence for each card is cached during the session - when we review the same card again, the same sentence will be shown. The cache is cleared upon quitting Anki. The cards are never actually edited on disk.
-
-## Features
-
-*   **Question:** An example sentence in the source language using the word in context is generated automatically on the question side of the card.
-*   **Answer:** The target-language translation using the word being practiced is shown on the answer side.
-*   **Seamless Integration:** Connects directly to the Anki review process. Card are not being edited.
-*   **Caching:** Generated sentences are stored in memory during the session. The example sentence stays consistent when the card is flipped or reviewed again in the same session.
-*   **Powered by Gemini:** Uses `gemini-2.0-flash` for high-quality examples.
-*   **Language-agnostic:** Set your desired source and target languages in the config file. 
 
 ## Planned Features
 
